@@ -108,6 +108,7 @@ Changelog:
 - June 24, 2025. Initial setup
 - June 24, 2025. Added PostgreSQL database integration with Drizzle ORM
 - June 24, 2025. Updated dialogue text and character names
+- June 24, 2025. Added audio features: balloon pop sounds and Happy Birthday melody
 ```
 
 ## User Preferences

@@ -31,6 +31,95 @@ const GameCanvas = ({ scene, onComplete }: GameCanvasProps) => {
   const [cakeCut, setCakeCut] = useState(false);
   const [showHappyBirthday, setShowHappyBirthday] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  // Initialize audio context
+  useEffect(() => {
+    const initAudio = () => {
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+    };
+    
+    // Initialize on first user interaction
+    const handleFirstInteraction = () => {
+      initAudio();
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+    
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+    
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, []);
+
+  // Create balloon pop sound
+  const playBalloonPop = () => {
+    if (!audioContextRef.current) return;
+    
+    const ctx = audioContextRef.current;
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    // Pop sound: quick frequency drop
+    oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.1);
+    
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+    
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.1);
+  };
+
+  // Create happy birthday melody
+  const playHappyBirthday = () => {
+    if (!audioContextRef.current) return;
+    
+    const ctx = audioContextRef.current;
+    const notes = [
+      // Happy Birthday melody frequencies
+      { freq: 261.63, duration: 0.5 }, // C4 - Hap-
+      { freq: 261.63, duration: 0.5 }, // C4 - py
+      { freq: 293.66, duration: 1.0 }, // D4 - Birth-
+      { freq: 261.63, duration: 1.0 }, // C4 - day
+      { freq: 349.23, duration: 1.0 }, // F4 - to
+      { freq: 329.63, duration: 2.0 }, // E4 - you
+      
+      { freq: 261.63, duration: 0.5 }, // C4 - Hap-
+      { freq: 261.63, duration: 0.5 }, // C4 - py
+      { freq: 293.66, duration: 1.0 }, // D4 - Birth-
+      { freq: 261.63, duration: 1.0 }, // C4 - day
+      { freq: 392.00, duration: 1.0 }, // G4 - to
+      { freq: 349.23, duration: 2.0 }, // F4 - you
+    ];
+    
+    let currentTime = ctx.currentTime;
+    
+    notes.forEach(note => {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      oscillator.frequency.setValueAtTime(note.freq, currentTime);
+      gainNode.gain.setValueAtTime(0.1, currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
+      
+      oscillator.start(currentTime);
+      oscillator.stop(currentTime + note.duration);
+      
+      currentTime += note.duration;
+    });
+  };
 
   // Initialize balloons for room scene
   useEffect(() => {
@@ -250,31 +339,31 @@ const GameCanvas = ({ scene, onComplete }: GameCanvasProps) => {
         }
         setFireworks(newFireworks);
 
-        // Play birthday song simulation
+        // Play birthday song
         setIsPlaying(true);
+        playHappyBirthday();
         setTimeout(() => {
           setIsPlaying(false);
-        }, 3000);
+        }, 6000);
       }
     } else if (scene === 'room') {
       // Check if clicked on any balloon
+      let balloonPopped = false;
       setBalloons(prev => prev.filter(balloon => {
         const distance = Math.sqrt(
           Math.pow(clickX - balloon.x, 2) + Math.pow(clickY - balloon.y, 2)
         );
         if (distance <= balloon.radius) {
-          // Play pop sound effect
-          try {
-            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJdbXHmQqpGnkKuVr5yonaievaDApL2nrLavqLqrpr2sr7O0qbu4q7++tLq6tb7AtL27tbvAtLu9s7u9tLu9s7q9tLu9s7q9tLy9s7u9s7u9');
-            audio.volume = 0.3;
-            audio.play().catch(() => {}); // Ignore errors
-          } catch (e) {
-            // Ignore audio errors
-          }
-          return false; // Remove balloon
+          balloonPopped = true;
+          return false; // Remove this balloon
         }
-        return true; // Keep balloon
+        return true; // Keep this balloon
       }));
+      
+      // Play pop sound if a balloon was clicked
+      if (balloonPopped) {
+        playBalloonPop();
+      }
     }
   };
 
@@ -288,6 +377,11 @@ const GameCanvas = ({ scene, onComplete }: GameCanvasProps) => {
           {isPlaying && (
             <p className="text-lg text-green-600 mt-2 animate-pulse">
               🎵 Playing Happy Birthday Song! 🎵
+            </p>
+          )}
+          {scene === 'room' && (
+            <p className="text-sm text-gray-600 mt-1">
+              Click on balloons to hear them pop!
             </p>
           )}
         </div>
