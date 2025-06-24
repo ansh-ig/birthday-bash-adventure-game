@@ -228,6 +228,15 @@ const GameCanvas = ({ scene, onComplete }: GameCanvasProps) => {
         setCakeCut(true);
         setShowHappyBirthday(true);
         
+        // Play celebration sound
+        try {
+          const audio = new Audio('data:audio/wav;base64,UklGRvIEAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQoFAACBhYmFa1lzbjSxlKKOoZGfka6QqpGnkKuVr5yonaievaDApL2nrLavqLqrpr2sr7O0qbu4q7++tLq6tb7AtL27tbvAtLu9s7u9tLu9s7q9tLu9s7q9tLy9s7u9s7u9');
+          audio.volume = 0.5;
+          audio.play().catch(() => {});
+        } catch (e) {
+          // Ignore audio errors
+        }
+        
         // Create fireworks
         const newFireworks: Firework[] = [];
         for (let i = 0; i < 10; i++) {
@@ -253,7 +262,18 @@ const GameCanvas = ({ scene, onComplete }: GameCanvasProps) => {
         const distance = Math.sqrt(
           Math.pow(clickX - balloon.x, 2) + Math.pow(clickY - balloon.y, 2)
         );
-        return distance > balloon.radius;
+        if (distance <= balloon.radius) {
+          // Play pop sound effect
+          try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJdbXHmQqpGnkKuVr5yonaievaDApL2nrLavqLqrpr2sr7O0qbu4q7++tLq6tb7AtL27tbvAtLu9s7u9tLu9s7q9tLu9s7q9tLy9s7u9s7u9');
+            audio.volume = 0.3;
+            audio.play().catch(() => {}); // Ignore errors
+          } catch (e) {
+            // Ignore audio errors
+          }
+          return false; // Remove balloon
+        }
+        return true; // Keep balloon
       }));
     }
   };
