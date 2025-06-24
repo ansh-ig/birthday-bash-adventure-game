@@ -38,7 +38,7 @@ const CharacterDialogue = ({ dialogue, onComplete }: CharacterDialogueProps) => 
         <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-6xl">
           👨
         </div>
-        <p className="text-center mt-2 text-blue-600 font-semibold">Your Patootie</p>
+        <p className="text-center mt-2 text-blue-600 font-semibold">Your Friend</p>
       </div>
 
       <Card className="max-w-3xl bg-white/95 backdrop-blur-sm shadow-2xl">
@@ -76,7 +76,7 @@ const CharacterDialogue = ({ dialogue, onComplete }: CharacterDialogueProps) => 
         <div className="w-32 h-32 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-6xl">
           👩
         </div>
-        <p className="text-center mt-2 text-pink-600 font-semibold">Pip</p>
+        <p className="text-center mt-2 text-pink-600 font-semibold">You (Birthday Girl)</p>
       </div>
     </div>
   );

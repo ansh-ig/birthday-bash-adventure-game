@@ -13,11 +13,18 @@ const Index = () => {
   const [cakeVisited, setCakeVisited] = useState(false);
   const [roomVisited, setRoomVisited] = useState(false);
 
-  const introDialogue = `Well lets put that navratri moment as an our first memory, wo moment still mere lie kaafi special h, i mean when i saw you everything around me stopped at very moment. like nothing mattered kch b nai , just you it was like ki jaise time ruk gya hei, world is paused just so i could only see you.
-And the that shy little glance you gave me.
-When you looked at me and said "Kya hai?" with that tiny gesture, trying to hide that cute smile of yours 
-God, that smilee. wo moment still goes through my mind everyday . pyari smilee wo Kya Hei? moment h yr
-That was the moment you unknowingly stole a piece of me forever`;
+  const introDialogue = `You know, I still remember that Navratri moment like it was yesterday. That memory… it's carved deep in my heart.
+When I saw you for the first time — everything just stopped.
+Like literally, the world around me paused.
+The music, the lights, the noise — sab kuch — just froze.
+And in that moment, there was only you.
+It felt like time itself had taken a break, just so I could see you clearly — just you.
+Nothing else mattered.
+
+And then… that shy little glance you gave me.
+When you looked at me and said "Kya hai?" with that tiny gesture, trying to hide that cute smile of yours —
+God, that smile.
+That was the moment you unknowingly stole a piece of me forever.`;
 
   const handleSceneComplete = (scene: Scene) => {
     if (scene === 'cake') {
@@ -45,8 +52,6 @@ That was the moment you unknowingly stole a piece of me forever`;
           <div className="absolute top-20 right-20 w-6 h-6 bg-pink-400 rounded-full animate-pulse"></div>
           <div className="absolute bottom-20 left-20 w-10 h-10 bg-purple-400 rounded-full animate-bounce delay-300"></div>
           <div className="absolute bottom-10 right-10 w-4 h-4 bg-blue-400 rounded-full animate-pulse delay-500"></div>
-          <div className="absolute top-32 left-1/4 w-5 h-5 bg-green-400 rounded-full animate-ping delay-1000"></div>
-          <div className="absolute bottom-32 right-1/4 w-7 h-7 bg-red-400 rounded-full animate-spin delay-700"></div>
         </div>
 
         {currentScene === 'intro' && (
