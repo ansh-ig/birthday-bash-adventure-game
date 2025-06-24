@@ -87,13 +87,13 @@ This is a full-stack web application built as an interactive story experience wi
 - **Command**: `npm run dev` runs both frontend and backend
 - **Port Configuration**: Frontend on Vite dev server, backend on port 5000
 - **Hot Reload**: Vite HMR for frontend, tsx watch mode for backend
-- **Database**: In-memory storage for rapid development iteration
+- **Database**: PostgreSQL database with Drizzle ORM integration
 
 ### Production Build
 - **Frontend**: Vite builds optimized static assets to `dist/public`
 - **Backend**: esbuild bundles server code to `dist/index.js`
 - **Static Serving**: Express serves built frontend assets
-- **Database**: PostgreSQL connection via environment variables
+- **Database**: PostgreSQL connection via environment variables with Neon serverless driver
 
 ### Replit Deployment
 - **Autoscale Deployment**: Configured for Replit's autoscale infrastructure
@@ -106,6 +106,8 @@ This is a full-stack web application built as an interactive story experience wi
 ```
 Changelog:
 - June 24, 2025. Initial setup
+- June 24, 2025. Added PostgreSQL database integration with Drizzle ORM
+- June 24, 2025. Updated dialogue text and character names
 ```
 
 ## User Preferences
